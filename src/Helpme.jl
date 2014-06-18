@@ -7,9 +7,10 @@ const database = [
 	"MethodError(+,#\"" =>
 		"Strings are concatenated with the * operator, not the + operator.",
 	"MethodError(convert,(ASCIIString,#merge(" =>
-		"Julia attempts to choose the proper type for Dicts when [brackets] are used, and merge can be fussy when types don't match up. To force Julia to assign the type Dict{Any,Any}, use {braces} in your variable definitions for Dicts."
+		"Julia attempts to choose the proper type for Dicts when [brackets] are used, and merge can be fussy when types don't match up. To force Julia to assign the type Dict{Any,Any}, use {braces} in your variable definitions for Dicts.",
+	"ErrorException(unsupported or misplaced expression#" =>
+		"Keywords like using, import, and export can only appear at global-level scopes. They can't even show up in a quote block in a macro definition. An ugly workaround, if you absolutely cannot avoid it, is to use expressions like eval(parse(\"import ...\") instead."
 ]
-
 
 function levenshtein(a, b, len_a=length(a), len_b=length(b))
 	if a == b
@@ -68,7 +69,7 @@ macro helpme(ex)
 	s = string(ex)
 	quote
 		try
-			$ex
+			$(esc(ex))
 		catch e
 			search(e, $s)
 		end
