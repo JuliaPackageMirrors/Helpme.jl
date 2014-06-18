@@ -1,16 +1,21 @@
 module Helpme
 
 export @helpme
-import Base: search
 
-const database = [
-	"MethodError(+,#\"" =>
-		"Strings are concatenated with the * operator, not the + operator.",
-	"MethodError(convert,(ASCIIString,#merge(" =>
-		"Julia attempts to choose the proper type for Dicts when [brackets] are used, and merge can be fussy when types don't match up. To force Julia to assign the type Dict{Any,Any}, use {braces} in your variable definitions for Dicts.",
-	"ErrorException(unsupported or misplaced expression#" =>
-		"Keywords like using, import, and export can only appear at global-level scopes. They can't even show up in a quote block in a macro definition. An ugly workaround, if you absolutely cannot avoid it, is to use expressions like eval(parse(\"import ...\") instead."
-]
+global database = Dict()
+macro example(fn, suggestion)
+	global database
+	fnstr = string(fn)
+	quote
+		try
+			$(esc(fn))()
+		catch e
+			database[(repr(e), $fnstr)] = $suggestion
+		end
+	end
+end
+
+include("examples.jl")
 
 function levenshtein(a, b, len_a=length(a), len_b=length(b))
 	if a == b
@@ -43,16 +48,16 @@ function levenshtein(a, b, len_a=length(a), len_b=length(b))
 end
 
 function distance(key, e, s)
-	(k1, k2) = split(key, '#')
+	(k1, k2) = key
 	(d1, d2) = (levenshtein(k1,repr(e)), levenshtein(k2,s))
-	(w1, w2) = (2, 1)
+	(w1, w2) = (10, 1)
 	return sqrt(d1*d1*w1+d2*d2*w2)
 end
 
 function search(e, s)
 	global database
 	msg = "No suggestions found. Sorry :("
-	dist = sqrt(2*length(repr(e))^2 + length(s)^2)
+	dist = Inf
 	for key in keys(database)
 		d = distance(key, e, s)
 		if d < dist
