@@ -7,7 +7,9 @@ Frustrating error messages getting you down? Wrap the code giving you problems i
 julia> @helpme begin
        merge(["foo"=>"Hello World!"], ["bar"=>1337])
        end
-INFO: Julia attempts to choose the proper type for Dicts when [brackets] are used, and merge can be fussy when types don't match up. To force Julia to assign the type Dict{Any,Any}, use {braces} in your variable definitions for Dicts.
+INFO: Julia attempts to choose the proper type for Dicts when [brackets] are used,
+and merge can be fussy when types don't match up. To force Julia to assign the type
+Dict{Any,Any}, use {braces} in your variable definitions for Dicts.
 ERROR: no method convert(Type{ASCIIString}, Int64)
  in setindex! at dict.jl:521
  in merge! at dict.jl:78

@@ -45,12 +45,10 @@ function distance(key, e, s)
 	(k1, k2) = split(key, '#')
 	(d1, d2) = (levenshtein(k1,repr(e)), levenshtein(k2,s))
 	(w1, w2) = (2, 1)
-	# println((d1, d2, sqrt(d1*d1*w1+d2*d2*w2)))
 	return sqrt(d1*d1*w1+d2*d2*w2)
 end
 
 function search(e, s)
-	# println(repr(e), s)
 	global database
 	msg = "No suggestions found. Sorry :("
 	dist = sqrt(2*length(repr(e))^2 + length(s)^2)
@@ -77,4 +75,4 @@ macro helpme(ex)
 	end
 end
 
-end # module
+end
