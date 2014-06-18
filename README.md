@@ -16,3 +16,5 @@ ERROR: no method convert(Type{ASCIIString}, Int64)
 julia> merge({"foo"=>"Hello World!"}, {"bar"=>1337})
        {"foo"=>"Hello World!", "bar"=>1337}
 ```
+
+Helpme will attempt to find a suggestion based on the exception raised and the code passed. If one is found, it will print a friendly message using to INFO.
