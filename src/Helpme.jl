@@ -9,6 +9,7 @@ macro example(fn, suggestion)
 	quote
 		try
 			$(esc(fn))()
+			info("An example did not raise an error: "*$suggestion)
 		catch e
 			database[(repr(e), $fnstr)] = $suggestion
 		end
