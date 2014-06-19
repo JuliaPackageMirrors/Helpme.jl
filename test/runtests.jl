@@ -17,8 +17,6 @@ macro suggestion_id(ex)
 			for i in 1:length(keybase)
 				k = keybase[i]
 				if id == k
-					println((e, $(string(ex))))
-					println(id)
 					z = i
 				end
 			end
@@ -79,7 +77,7 @@ end
 tests = [test1, test2, test3, test4, test5, test6, test7, test8, test9]
 
 for i in 1:length(tests)
-	j = @suggestion_id() do
+	j = @suggestion_id begin
 		tests[i]()
 	end
 
