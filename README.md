@@ -4,6 +4,8 @@
 
 Frustrating error messages getting you down? Wrap the code giving you problems in a call to the `@helpme` macro like so:
 ```julia
+julia> Pkg.clone("https://github.com/snotskie/Helpme.jl")
+julia> using Helpme
 julia> @helpme begin
        merge(["foo"=>"Hello World!"], ["bar"=>1337])
        end
@@ -12,10 +14,9 @@ used, and merge can be fussy when types don't match up. To force Julia to
 assign the type Dict{Any,Any}, use {braces} in your variable definitions for
 Dicts.
 INFO: Strings are concatenated with the * operator, not the + operator.
-INFO: Julia is not Python. All if, for, begin, function, etc. blocks must be
-completed with an end statement. Similarly, all end statements must have been
-"opened"with an if, for, etc. statement. Count your open and closes and make
-sure they match.
+INFO: Type parameters in Julia are invariant, meaning although Int <: Number is
+true, Array{Int} <: Array{Number} is false. This can be annoying when defining
+functions. Instead of "f(Array{Number})=..." try "f{T<:Number}(Array{T})=..."
 ERROR: no method convert(Type{ASCIIString}, Int64)
  in setindex! at dict.jl:521
  in merge! at dict.jl:78
