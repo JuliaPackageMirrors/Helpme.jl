@@ -2,16 +2,20 @@ module Helpme
 
 export @helpme
 
+global keybase = {}
 global database = Dict()
 macro example(fn, suggestion)
 	global database
+	global keybase
 	fnstr = string(fn)
 	quote
 		try
 			$(esc(fn))()
 			info("An example did not raise an error: "*$suggestion)
 		catch e
-			database[(repr(e), $fnstr)] = $suggestion
+			key = (repr(e), $fnstr)
+			database[key] = $suggestion
+			append!(keybase, [key])
 		end
 	end
 end
@@ -51,24 +55,25 @@ end
 function distance(key, e, s)
 	(k1, k2) = key
 	(d1, d2) = (levenshtein(k1,repr(e)), levenshtein(k2,s))
-	(w1, w2) = (10, 1)
+	(w1, w2) = (1000, 1)
 	return sqrt(d1*d1*w1+d2*d2*w2)
 end
 
 function search(e, s)
 	global database
+	id = ()
 	msg = "No suggestions found. Sorry :("
 	dist = Inf
 	for key in keys(database)
 		d = distance(key, e, s)
 		if d < dist
+			id = key
 			msg = database[key]
 			dist = d
 		end
 	end
 
-	info(msg)
-	rethrow(e)
+	return (id, msg)
 end
 
 macro helpme(ex)
@@ -77,7 +82,9 @@ macro helpme(ex)
 		try
 			$(esc(ex))
 		catch e
-			search(e, $s)
+			id, msg = search(e, $s)
+			info(msg)
+			rethrow(e)
 		end
 	end
 end
