@@ -43,14 +43,14 @@ end
 
 # 6
 @example("Julia is not Python. All if, for, begin, function, etc. blocks must be "*
-"completed with an end statement. Similarly, all end statements must have been \"opened\""*
+"completed with an end statement. Similarly, all end statements must have been \"opened\" "*
 "with an if, for, etc. statement. Count your open and closes and make sure they match.") do
 	eval(parse("if true"))
 end
 
 # 7
 @example("Julia is not Python. All if, for, begin, function, etc. blocks must be "*
-"completed with an end statement. Similarly, all end statements must have been \"opened\""*
+"completed with an end statement. Similarly, all end statements must have been \"opened\" "*
 "with an if, for, etc. statement. Count your open and closes and make sure they match.") do
 	eval(parse("end"))
 end
@@ -78,14 +78,14 @@ end
 
 # 11
 @example("Putting a colon in a function declaration, such as in \"function f():\", "*
-"is grammatically correct, but it confuses the parse. Do not use colons in Julia like "*
+"is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
 "you do in Python to start blocks.") do
 	eval(parse("function ex(): a = 1;end;ex()"))
 end
 
 # 12
 @example("Putting a colon in a function declaration, such as in \"function f():\", "*
-"is grammatically correct, but it confuses the parse. Do not use colons in Julia like "*
+"is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
 "you do in Python to start blocks.") do
 	function ex():
 		print()
@@ -95,6 +95,17 @@ end
 end
 
 # 13
+@example("Putting a colon in a function declaration, such as in \"function f():\", "*
+"is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
+"you do in Python to start blocks.") do
+	function ex():
+		Base.print()
+	end
+
+	ex()
+end
+
+# 14
 @example("Iteration over dictionaries in Julia is iteration over (key, value), "*
 "not just over key or over value like in other languages. Use expressions like "*
 "\"for (k,v) in mydict\" where possible to avoid confusion.") do
@@ -103,14 +114,14 @@ end
 	end
 end
 
-### RETIRED ###
-# @example("Keywords like using, import, and export can only appear at "*
-# "global-level scopes. They can't even show up in a quote block in a macro "*
-# "definition. An ugly workaround, if you absolutely cannot avoid it, is to use "*
-# "expressions like eval(parse(\"import ...\") instead.") do
-# 	function ex()
-# 		import Base
-# 	end
+# 15
+@example("Keywords like using, import, and export can only appear at "*
+"global-level scopes. They can't even show up in a quote block in a macro "*
+"definition. An ugly workaround, if you absolutely cannot avoid it, is to use "*
+"expressions like eval(parse(\"import ...\") instead.") do
+	function ex()
+		import Base
+	end
 
-# 	ex()
-# end
+	ex()
+end

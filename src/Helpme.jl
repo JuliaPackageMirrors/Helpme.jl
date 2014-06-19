@@ -55,25 +55,20 @@ end
 function distance(key, e, s)
 	(k1, k2) = key
 	(d1, d2) = (levenshtein(k1,repr(e)), levenshtein(k2,s))
-	(w1, w2) = (1000, 1)
+	(w1, w2) = (10, 1)
 	return sqrt(d1*d1*w1+d2*d2*w2)
 end
 
 function search(e, s)
 	global database
-	id = ()
-	msg = "No suggestions found. Sorry :("
-	dist = Inf
+	results = {}
 	for key in keys(database)
 		d = distance(key, e, s)
-		if d < dist
-			id = key
-			msg = database[key]
-			dist = d
-		end
+		append!(results, [(d, key, database[key])])
 	end
 
-	return (id, msg)
+	sort!(results, by=first)
+	return results[1:3]
 end
 
 macro helpme(ex)
@@ -82,8 +77,10 @@ macro helpme(ex)
 		try
 			$(esc(ex))
 		catch e
-			id, msg = search(e, $s)
-			info(msg)
+			for (d, id, msg) in search(e, $s)
+				info(msg)
+			end
+
 			rethrow(e)
 		end
 	end
