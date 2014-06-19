@@ -52,11 +52,29 @@ function levenshtein(a, b, len_a=length(a), len_b=length(b))
 	end
 end
 
+flatten(s::Symbol) = {s}
+function flatten(e::Expr)
+	flat = {}
+	append!(flat, [string(e.head)])
+	for arg in e.args
+		append!(flat, isa(arg, Expr)? flatten(arg) : [arg])
+	end
+
+	return flat
+end
+
+function quelm(q)
+	return flatten(eval(parse(":("*q*")")))
+end
+
 function distance(key, e, s)
 	(k1, k2) = key
-	(d1, d2) = (levenshtein(k1,repr(e)), levenshtein(k2,s))
-	(w1, w2) = (10, 1)
-	return sqrt(d1*d1*w1+d2*d2*w2)
+	d1 = levenshtein(quelm(k1), quelm(repr(e)))
+	d2 = levenshtein(quelm(k2), quelm(s))
+	d3 = levenshtein(k1, repr(e))
+	d4 = levenshtein(k2, s)
+	(w1, w2, w3, w4) = (50, 0, 50, 1)
+	return sqrt(d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4)
 end
 
 function search(e, s)

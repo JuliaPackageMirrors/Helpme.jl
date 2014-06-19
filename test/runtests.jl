@@ -10,8 +10,6 @@ macro suggestion_id(ex)
 			$(esc(ex))()
 			error("Example did not fail.")
 		catch e
-			info(repr(e))
-			info($(string(ex)))
 			for (d, id, msg) in Helpme.search(e, $(string(ex)))
 				for i in 1:length(Helpme.keybase)
 					k = Helpme.keybase[i]
@@ -27,89 +25,124 @@ macro suggestion_id(ex)
 	end
 end
 
-@test in(1, @suggestion_id begin
+indices = Int[]
+
+### BEGIN TESTS ###
+
+results = @suggestion_id begin
 	a = ["a"=>1]
 	b = ["a"=>:a]
 	merge(a, b)
-end)
+end
+append!(indices, [findfirst(results, 1)])
 
-@test in(2, @suggestion_id begin
+results = @suggestion_id begin
 	a = "a"
 	b = "b"
 	a+b
-end)
+end
+append!(indices, [findfirst(results, 2)])
 
-@test in(3, @suggestion_id begin
+results = @suggestion_id begin
 	dataset = {1, 2, 3, 4, 5}
 	query = "12345"
 	for m in eachmatch(r"\d", query)
 		dataset[m]
 	end
-end)
+end
+append!(indices, [findfirst(results, 3)])
 
-@test in(4, @suggestion_id begin
+results = @suggestion_id begin
 	dataset = {"a"=>1, "b"=>2}
 	query = "ab"
 	for m in eachmatch(r"[a-z]", query)
 		dataset[m]
 	end
-end)
+end
+append!(indices, [findfirst(results, 4)])
 
-@test in(5, @suggestion_id begin
+results = @suggestion_id begin
 	function alpha(a::Dict{ASCIIString, Number})
 		a
 	end
 
 	alpha(["test"=>255])
-end)
+end
+append!(indices, [findfirst(results, 5)])
 
-@test in(6, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("for i in 1:12"))
-end)
+end
+append!(indices, [findfirst(results, 6)])
 
-@test in(7, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("for i in 1:12; identity(i); end; end"))
-end)
+end
+append!(indices, [findfirst(results, 7)])
 
-@test in(8, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("function Base.&&(a,b); a&&b; end"))
-end)
+end
+append!(indices, [findfirst(results, 8)])
 
-@test in(9, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("function Base.||(a,b); a||b; end"))
-end)
+end
+append!(indices, [findfirst(results, 9)])
 
-@test in(10, @suggestion_id begin
+results = @suggestion_id begin
 	function jwngwoijenfoer(a::Array{Float32,8})
 		a
 	end
 	
 	jwngwoijenfoer(Float32[1:8])
-end)
+end
+append!(indices, [findfirst(results, 10)])
 
-@test in(11, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): nkjsndf=[1:8];end; ooewjdbwoedjfvobwe()"))
-end)
+end
+append!(indices, [findfirst(results, 11)])
 
-@test in(12, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): identity(9);end; ooewjdbwoedjfvobwe()"))
-end)
+end
+append!(indices, [findfirst(results, 12)])
 
-@test in(13, @suggestion_id begin
+results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): Base.identity(9);end; ooewjdbwoedjfvobwe()"))
-end)
+end
+append!(indices, [findfirst(results, 13)])
 
-@test in(14, @suggestion_id begin
+results = @suggestion_id begin
 	oqwjej = {"sdfre"=>3, "jkndivnf"=>"grewerg", "sdfwerf"=>{}}
 	for i in oqwjej
 		"Hello, " * oqwjej
 	end
-end)
+end
+append!(indices, [findfirst(results, 14)])
 
-@test in(15, @suggestion_id begin
+results = @suggestion_id begin
 	function nuinkjnbk()
 		import Base
 	end
 
 	nuinkjnbk()
-end)
+end
+append!(indices, [findfirst(results, 15)])
+
+### END TESTS ###
+
+dist = 0
+for i in 1:length(indices)
+	if indices[i] > 0
+		info("Test #"*string(i)*": "*string(indices[i]))
+		dist += (indices[i]-1)^2
+	else
+		info("Test #"*string(i)*": FAILED")
+	end
+end
+
+dist = sqrt(dist)
+info("Distance from ideal: "*string(dist))
+@test 0==length(filter(x->x==0, indices))
