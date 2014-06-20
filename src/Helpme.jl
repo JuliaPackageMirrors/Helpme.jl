@@ -95,7 +95,22 @@ macro helpme(ex)
 		try
 			$(esc(ex))
 		catch e
-			for (d, id, msg) in search(e, $s)
+			results = search(e, $s)
+			deletes = Int[]
+			messages = Dict()
+			for i in 1:length(results)
+				if haskey(messages, results[i][3])
+					append!(deletes, [i])
+				else
+					messages[results[i][3]] = true
+				end
+			end
+
+			for del in reverse(deletes)
+				deleteat!(results, del)
+			end
+
+			for (d, id, msg) in results
 				info(msg)
 			end
 

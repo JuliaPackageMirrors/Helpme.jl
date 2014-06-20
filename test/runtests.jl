@@ -131,6 +131,30 @@ results = @suggestion_id begin
 end
 append!(indices, [findfirst(results, 15)])
 
+results = @suggestion_id begin
+	function nuinkjnbk()
+		return 1+1
+	end
+
+	isdefined(nuinkjnbk)
+end
+append!(indices, [findfirst(results, 16)])
+
+results = @suggestion_id begin
+	function nuinkjnbk()
+		return 1+1
+	end
+
+	isdefined("nuinkjnbk")
+end
+append!(indices, [findfirst(results, 17)])
+
+results = @suggestion_id begin
+	isdefined(nuinkjnbk)
+end
+dump(results)
+append!(indices, [findfirst(results, 18)])
+
 ### END TESTS ###
 
 dist = 0

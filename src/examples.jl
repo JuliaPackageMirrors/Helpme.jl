@@ -125,3 +125,26 @@ end
 
 	ex()
 end
+
+# 16
+@example("Methods like isdefined take Symbols as parameters, not strings or "*
+"functions. To check if x is defined, use \"isdefined(:x),\" where :x is the Symbol "*
+"for x.") do
+	isdefined(isdefined)
+end
+
+# 17
+@example("Methods like isdefined take Symbols as parameters, not strings or "*
+"functions. To check if x is defined, use \"isdefined(:x),\" where :x is the Symbol "*
+"for x.") do
+	isdefined("ex")
+end
+
+# 18
+@example("Methods like isdefined take Symbols as parameters, not strings or "*
+"functions. To check if x is defined, use \"isdefined(:x),\" where :x is the Symbol "*
+"for x.") do
+	isdefined(ex)
+end
+
+# append! takes an array second value
