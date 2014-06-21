@@ -4,7 +4,7 @@
 
 Frustrating error messages getting you down? Wrap the code giving you problems in a call to the `@helpme` macro like so:
 ```julia
-julia> Pkg.clone("https://github.com/snotskie/Helpme.jl")
+julia> Pkg.add("Helpme")
 julia> using Helpme
 julia> @helpme begin
        merge(["foo"=>"Hello World!"], ["bar"=>1337])
