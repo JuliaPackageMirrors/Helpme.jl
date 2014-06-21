@@ -35,7 +35,7 @@ end
 @example("Type parameters in Julia are invariant, meaning although Int <: Number is true, "*
 "Array{Int} <: Array{Number} is false. This can be annoying when defining functions. "*
 "Instead of \"f(Array{Number})=...\" try \"f{T<:Number}(Array{T})=...\"") do
-	function l(a::Array{Number,1})
+	function l(::Array{Number,1})
 	end
 	l([6])
 end
@@ -69,7 +69,7 @@ end
 # 10
 @example("The i in the expression \"Array{Int,i}\" is not the length of the array "*
 "but instead the number of dimensions.") do
-	function l(a::Array{Number,6})
+	function l(::Array{Number,6})
 	end
 	l(Number[6])
 end
@@ -85,20 +85,14 @@ end
 @example("Putting a colon in a function declaration, such as in \"function f():\", "*
 "is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
 "you do in Python to start blocks.") do
-	function l():
-		print()
-	end
-	l()
+	eval(parse("function l(): print();end;l()"))
 end
 
 # 13
 @example("Putting a colon in a function declaration, such as in \"function f():\", "*
 "is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
 "you do in Python to start blocks.") do
-	function l():
-		Base.print()
-	end
-	l()
+	eval(parse("function l(): Base.print();end;l()"))
 end
 
 # 14
@@ -145,7 +139,7 @@ end
 # 19
 @example("If blocks and ternary operations in Julia require Boolean types, like Java, "*
 "not JavaScript.") do
-	if 0?0:0
+	if 6?6:6
 	end
 end
 
@@ -159,7 +153,7 @@ end
 # 21
 @example("If blocks and ternary operations in Julia require Boolean types, like Java, "*
 "not JavaScript.") do
-	if {}?{}:{}
+	if []?[]:[]
 	end
 end
 
@@ -180,12 +174,61 @@ end
 end
 
 # 24
-@example("Julia has 1-based indexing, so the first element is at index 1, not index 0.") do
+@example("Julia has 1-based indexing, so the first element is at index 1, not index 0. "*
+"Also, index -1 throws an error; use the end keyword as an index to get the last element.") do
 	[][0]
 end
 
 # 25
 @example("Values are not automatically converted to strings during string concatenation. "*
-"Convert first them using the \"string\" function.") do
+"Convert them first using the \"string\" function.") do
 	"l"*6
+end
+
+# 26
+@example("The a:b syntax creates a Range object. Surround in brackets like [a:b] to "*
+"create an Array.") do
+	function l(::Array)
+	end
+	l(6:6)
+end
+
+# 27
+@example("Julia distinguishes between keyword and optional arguments. For a function "*
+"f(x, y=1; z=2), x is required, y is optional, and z is a keyword. Invoking f(1, z=3) "*
+"is legal, but f(1, y=2, z=3) is not. Note the position of the semi-colon in the function "*
+"definition.") do
+	function l(q,w=6;e=6)
+	end
+	l(6,w=6)
+end
+
+# 28
+@example("The value::Type syntax is Julia has multiple meanings. It is used in argument lists "*
+"and variable definitions to declare type. It is used everywhere else as a type assertion. "*
+"Perhaps you mean to use the \"isa\" function, the \"convert\" function, or a constructor. "*
+"If not, it's best to write your code so it operates on a wider range of types.") do
+	6::String
+end
+
+# 29
+@example("The <: operator operates on two types, not a value and a type. The \"isa\" function "*
+"takes a value and a type.") do
+	6<:String
+end
+
+# 30
+@example("The simpler :(x) syntax returns a Symbol, whereas the more complex :(x+y), "*
+"etc. syntax returns an Expr.") do
+	function l(::Expr)
+	end
+	l(:(6))
+end
+
+# 31
+@example("The simpler :(x) syntax returns a Symbol, whereas the more complex :(x+y), "*
+"etc. syntax returns an Expr.") do
+	function l(::Symbol)
+	end
+	l(:(6+6))
 end

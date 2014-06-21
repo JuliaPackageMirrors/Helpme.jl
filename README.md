@@ -32,5 +32,5 @@ Helpme will attempt to find a suggestion based on the exception raised and the c
 
 In no particular order:
 
-* Examples, Examples, Examples. To be any helpful, Helpme will need a database of all the mistakes Julia-coders tend to run into. At present, it only has twenty-five examples to take suggestions from.
+* Examples, Examples, Examples. To be any helpful, Helpme will need a database of all the mistakes Julia-coders tend to run into. At present, it only has thirty-one examples to take suggestions from.
 * (DONE) Better Distance Calculations. To determine the "closest" example error and code to what's passed to it, `@helpme` needs to know what determines "close"--that is, it needs a distance function. At present, because I already had the code laying around, it uses a Levenshtein distance on their string representations. I hope to use something a bit more accurate in the future.

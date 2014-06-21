@@ -2,20 +2,40 @@ module Helpme
 
 export @helpme
 
-global keybase = {}
-global database = Dict()
+quelm(q::String) = flatten(eval(parse(":("*q*")")))
+flatten(s::Symbol) = {s}
+function flatten(e::Expr)
+	flat = {}
+	push!(flat, string(e.head))
+	for arg in e.args
+		append!(flat, isa(arg, Expr)? flatten(arg) : [arg])
+	end
+
+	push!(flat, e.typ)
+	return flat
+end
+
+type Example
+	error::Exception
+	erepr::String
+	fnstr::String
+	suggestion::String
+	equelm::Array
+	squelm::Array
+	Example(s::String) = new(Exception(""), "", "", s, {}, {})
+	Example(e::Exception, f::String, s::String) =
+		new(e, repr(e), f, s, quelm(repr(e)), quelm(f))
+end
+
+const database = {}
 macro example(fn, suggestion)
-	global database
-	global keybase
 	fnstr = string(fn)
 	quote
 		try
 			$(esc(fn))()
-			info("An example did not raise an error: "*$suggestion)
+			warn("An example did not raise an error: "*$suggestion)
 		catch e
-			key = (repr(e), $fnstr)
-			database[key] = $suggestion
-			push!(keybase, key)
+			push!(database, Example(e, $fnstr, $suggestion))
 		end
 	end
 end
@@ -52,46 +72,52 @@ function levenshtein(a, b, len_a=length(a), len_b=length(b))
 	end
 end
 
-flatten(s::Symbol) = {s}
-function flatten(e::Expr)
-	flat = {}
-	push!(flat, string(e.head))
-	for arg in e.args
-		append!(flat, isa(arg, Expr)? flatten(arg) : [arg])
-	end
-
-	return flat
-end
-
-function quelm(q)
-	return flatten(eval(parse(":("*q*")")))
-end
-
-#weights = (50, 0, 50, 1) # 3
-#weights = (85, 56, 38, 1) # 2.65
-weights = (67, 54, 54, 0.2) # 2.24
-# weights = (100rand(), 100rand(), 100rand(), 100rand())
-function distance(key, e, s)
-	global weights
-	(k1, k2) = key
-	d1 = levenshtein(quelm(k1), quelm(repr(e)))
-	d2 = levenshtein(quelm(k2), quelm(s))
-	d3 = levenshtein(k1, repr(e))
-	d4 = levenshtein(k2, s)
+r() = 1 #r(5)
+r(n) = 2sum([rand() for i in 1:n])/n
+const weights = (44r(), 38r(), 21r(), 33r())
+function distance(example, equelm, squelm, erepr, s)
+	d1 = levenshtein(example.equelm, equelm) / length(equelm)
+	d2 = levenshtein(example.squelm, squelm) / length(squelm)
+	d3 = levenshtein(example.erepr, erepr)   / length(erepr)
+	d4 = levenshtein(example.fnstr, s)       / length(s)
 	(w1, w2, w3, w4) = weights
-	return sqrt(d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4)
+	dist = sqrt(d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4)
+	return dist
 end
 
-function search(e, s)
-	global database
-	results = {}
-	for key in keys(database)
-		d = distance(key, e, s)
-		push!(results, (d, key, database[key]))
+function search(e::Exception, s::String)
+	examples = Example[]
+	dists = Float64[]
+	max_dist = 0
+	equelm = quelm(repr(e))
+	squelm = quelm(s)
+	erepr = repr(e)
+	for example in database
+		dist = distance(example, equelm, squelm, erepr, s)
+		if length(examples) < 3
+			push!(examples, example)
+			push!(dists, dist)
+			max_dist = max(dist, max_dist)
+		elseif dist < max_dist
+			for i in 1:3
+				if dist < dists[i]
+					example, examples[i] = examples[i], example
+					dist, dists[i] = dists[i], dist
+				end
+
+				max_dist = maximum(dists)
+			end
+		end
 	end
 
-	sort!(results, by=first)
-	return results[1:3]
+	for i in [1, 2, 1]
+		if dists[i+1] < dists[i]
+			examples[i+1], examples[i] = examples[i], examples[i+1]
+			dists[i+1], dists[i] = dists[i], dists[i+1]
+		end
+	end
+
+	return examples
 end
 
 macro helpme(ex)
@@ -104,10 +130,10 @@ macro helpme(ex)
 			deletes = Int[]
 			messages = Dict()
 			for i in 1:length(results)
-				if haskey(messages, results[i][3])
+				if haskey(messages, results[i].suggestion)
 					push!(deletes, i)
 				else
-					messages[results[i][3]] = true
+					messages[results[i].suggestion] = true
 				end
 			end
 
@@ -116,11 +142,11 @@ macro helpme(ex)
 			end
 
 			if length(results) < 3
-				push!(results, (0, (), "TODO nice fallback message here"))
+				push!(results, Example("TODO nice fallback message here"))
 			end
 
-			for (d, id, msg) in results
-				info(msg)
+			for example in results
+				info(example.suggestion)
 			end
 
 			rethrow(e)
