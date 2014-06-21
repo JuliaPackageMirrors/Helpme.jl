@@ -22,7 +22,7 @@ type Example
 	suggestion::String
 	equelm::Array
 	squelm::Array
-	Example(s::String) = new(Exception(""), "", "", s, {}, {})
+	Example(s::String) = new(KeyError(""), "", "", s, {}, {})
 	Example(e::Exception, f::String, s::String) =
 		new(e, repr(e), f, s, quelm(repr(e)), quelm(f))
 end
@@ -142,7 +142,7 @@ macro helpme(ex)
 			end
 
 			if length(results) < 3
-				push!(results, Example("TODO nice fallback message here"))
+				push!(results, Example("Helpme not helping? Report an issue at <https://github.com/snotskie/Helpme.jl/issues>."))
 			end
 
 			for example in results
