@@ -15,7 +15,7 @@ macro example(fn, suggestion)
 		catch e
 			key = (repr(e), $fnstr)
 			database[key] = $suggestion
-			append!(keybase, [key])
+			push!(keybase, key)
 		end
 	end
 end
@@ -55,7 +55,7 @@ end
 flatten(s::Symbol) = {s}
 function flatten(e::Expr)
 	flat = {}
-	append!(flat, [string(e.head)])
+	push!(flat, string(e.head))
 	for arg in e.args
 		append!(flat, isa(arg, Expr)? flatten(arg) : [arg])
 	end
@@ -87,7 +87,7 @@ function search(e, s)
 	results = {}
 	for key in keys(database)
 		d = distance(key, e, s)
-		append!(results, [(d, key, database[key])])
+		push!(results, (d, key, database[key]))
 	end
 
 	sort!(results, by=first)
@@ -105,7 +105,7 @@ macro helpme(ex)
 			messages = Dict()
 			for i in 1:length(results)
 				if haskey(messages, results[i][3])
-					append!(deletes, [i])
+					push!(deletes, i)
 				else
 					messages[results[i][3]] = true
 				end
@@ -113,6 +113,10 @@ macro helpme(ex)
 
 			for del in reverse(deletes)
 				deleteat!(results, del)
+			end
+
+			if length(results) < 3
+				push!(results, (0, (), "TODO nice fallback message here"))
 			end
 
 			for (d, id, msg) in results

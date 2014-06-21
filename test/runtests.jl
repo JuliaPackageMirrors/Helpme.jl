@@ -196,7 +196,6 @@ results = @suggestion_id begin
 		println(myarray[i])
 	end
 end
-dump(results)
 push!(indices, findfirst(results, 24))
 
 results = @suggestion_id begin
