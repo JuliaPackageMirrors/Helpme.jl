@@ -249,4 +249,4 @@ const numfailed = length(filter(x->x==0, indices))
 info("Failed $numfailed tests.")
 @test numfailed == 0
 # @testlint "Helpme.jl"
-pwd()
+info(pwd())
