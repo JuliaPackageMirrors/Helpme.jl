@@ -1,6 +1,5 @@
 using Helpme
 using Base.Test
-using Lint
 
 # A series of tests corresponding with the examples in examples.jl
 
@@ -248,5 +247,3 @@ info("Distance from ideal: "*string(dist))
 const numfailed = length(filter(x->x==0, indices))
 info("Failed $numfailed tests.")
 @test numfailed == 0
-# @testlint "Helpme.jl"
-info(pwd())
