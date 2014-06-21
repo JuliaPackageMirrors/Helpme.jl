@@ -67,13 +67,18 @@ function quelm(q)
 	return flatten(eval(parse(":("*q*")")))
 end
 
+#weights = (50, 0, 50, 1) # 3
+#weights = (85, 56, 38, 1) # 2.65
+weights = (67, 54, 54, 0.2) # 2.24
+# weights = (100rand(), 100rand(), 100rand(), 100rand())
 function distance(key, e, s)
+	global weights
 	(k1, k2) = key
 	d1 = levenshtein(quelm(k1), quelm(repr(e)))
 	d2 = levenshtein(quelm(k2), quelm(s))
 	d3 = levenshtein(k1, repr(e))
 	d4 = levenshtein(k2, s)
-	(w1, w2, w3, w4) = (50, 0, 50, 1)
+	(w1, w2, w3, w4) = weights
 	return sqrt(d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4)
 end
 

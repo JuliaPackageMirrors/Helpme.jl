@@ -14,7 +14,7 @@ macro suggestion_id(ex)
 				for i in 1:length(Helpme.keybase)
 					k = Helpme.keybase[i]
 					if id == k
-						append!(z, [i])
+						push!(z, i)
 						break
 					end
 				end
@@ -30,18 +30,18 @@ indices = Int[]
 ### BEGIN TESTS ###
 
 results = @suggestion_id begin
-	a = ["a"=>1]
-	b = ["a"=>:a]
-	merge(a, b)
+	mydict1 = ["asdfasdf"=>1]
+	mydict2 = ["asdfasdf"=>:asdfasdf]
+	merge(mydict1, mydict2)
 end
-append!(indices, [findfirst(results, 1)])
+push!(indices, findfirst(results, 1))
 
 results = @suggestion_id begin
-	a = "a"
-	b = "b"
-	a+b
+	asdfasdf = "asdfasdf"
+	qwerty = "qwerty"
+	asdfasdf + qwerty
 end
-append!(indices, [findfirst(results, 2)])
+push!(indices, findfirst(results, 2))
 
 results = @suggestion_id begin
 	dataset = {1, 2, 3, 4, 5}
@@ -50,7 +50,7 @@ results = @suggestion_id begin
 		dataset[m]
 	end
 end
-append!(indices, [findfirst(results, 3)])
+push!(indices, findfirst(results, 3))
 
 results = @suggestion_id begin
 	dataset = {"a"=>1, "b"=>2}
@@ -59,60 +59,60 @@ results = @suggestion_id begin
 		dataset[m]
 	end
 end
-append!(indices, [findfirst(results, 4)])
+push!(indices, findfirst(results, 4))
 
 results = @suggestion_id begin
-	function alpha(a::Dict{ASCIIString, Number})
-		a
+	function alpha(asdfwef::Dict{ASCIIString, Number})
+		asdfwef
 	end
 
 	alpha(["test"=>255])
 end
-append!(indices, [findfirst(results, 5)])
+push!(indices, findfirst(results, 5))
 
 results = @suggestion_id begin
 	eval(parse("for i in 1:12"))
 end
-append!(indices, [findfirst(results, 6)])
+push!(indices, findfirst(results, 6))
 
 results = @suggestion_id begin
 	eval(parse("for i in 1:12; identity(i); end; end"))
 end
-append!(indices, [findfirst(results, 7)])
+push!(indices, findfirst(results, 7))
 
 results = @suggestion_id begin
 	eval(parse("function Base.&&(a,b); a&&b; end"))
 end
-append!(indices, [findfirst(results, 8)])
+push!(indices, findfirst(results, 8))
 
 results = @suggestion_id begin
 	eval(parse("function Base.||(a,b); a||b; end"))
 end
-append!(indices, [findfirst(results, 9)])
+push!(indices, findfirst(results, 9))
 
 results = @suggestion_id begin
-	function jwngwoijenfoer(a::Array{Float32,8})
-		a
+	function jwngwoijenfoer(asdfwef::Array{Float32,8})
+		asdfwef
 	end
 	
 	jwngwoijenfoer(Float32[1:8])
 end
-append!(indices, [findfirst(results, 10)])
+push!(indices, findfirst(results, 10))
 
 results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): nkjsndf=[1:8];end; ooewjdbwoedjfvobwe()"))
 end
-append!(indices, [findfirst(results, 11)])
+push!(indices, findfirst(results, 11))
 
 results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): identity(9);end; ooewjdbwoedjfvobwe()"))
 end
-append!(indices, [findfirst(results, 12)])
+push!(indices, findfirst(results, 12))
 
 results = @suggestion_id begin
 	eval(parse("function ooewjdbwoedjfvobwe(): Base.identity(9);end; ooewjdbwoedjfvobwe()"))
 end
-append!(indices, [findfirst(results, 13)])
+push!(indices, findfirst(results, 13))
 
 results = @suggestion_id begin
 	oqwjej = {"sdfre"=>3, "jkndivnf"=>"grewerg", "sdfwerf"=>{}}
@@ -120,7 +120,7 @@ results = @suggestion_id begin
 		"Hello, " * oqwjej
 	end
 end
-append!(indices, [findfirst(results, 14)])
+push!(indices, findfirst(results, 14))
 
 results = @suggestion_id begin
 	function nuinkjnbk()
@@ -129,31 +129,82 @@ results = @suggestion_id begin
 
 	nuinkjnbk()
 end
-append!(indices, [findfirst(results, 15)])
+push!(indices, findfirst(results, 15))
 
 results = @suggestion_id begin
 	function nuinkjnbk()
-		return 1+1
+		info("Hello World!")
 	end
 
 	isdefined(nuinkjnbk)
 end
-append!(indices, [findfirst(results, 16)])
+push!(indices, findfirst(results, 16))
 
 results = @suggestion_id begin
 	function nuinkjnbk()
-		return 1+1
+		info("Hello World!")
 	end
 
 	isdefined("nuinkjnbk")
 end
-append!(indices, [findfirst(results, 17)])
+push!(indices, findfirst(results, 17))
 
 results = @suggestion_id begin
 	isdefined(nuinkjnbk)
 end
+push!(indices, findfirst(results, 18))
+
+results = @suggestion_id begin
+	myarray = {}
+	if length(myarray)
+		print(myarray)
+	end
+end
+push!(indices, findfirst(results, 19))
+
+results = @suggestion_id begin
+	mystring = "Hello World!"
+	if mystring[1:0]
+		print(mystring)
+	end
+end
+push!(indices, findfirst(results, 20))
+
+results = @suggestion_id begin
+	myarray = Number[]
+	if myarray
+		print(myarray)
+	end
+end
+push!(indices, findfirst(results, 21))
+
+results = @suggestion_id begin
+	asdfgsdg = Float32[]
+	push!(asdfgsdg, [3.14])
+end
+push!(indices, findfirst(results, 22))
+
+results = @suggestion_id begin
+	asdfgsdg = {}
+	append!(asdfgsdg, 1)
+end
+push!(indices, findfirst(results, 23))
+
+results = @suggestion_id begin
+	myarray = Float32[1:1000]
+	for i in 0:1000
+		println(myarray[i])
+	end
+end
 dump(results)
-append!(indices, [findfirst(results, 18)])
+push!(indices, findfirst(results, 24))
+
+results = @suggestion_id begin
+	mystring = "Hello, I'm test #"
+	mynumber = 25
+	println(mystring * mynumber)
+end
+push!(indices, findfirst(results, 25))
 
 ### END TESTS ###
 
@@ -169,4 +220,5 @@ end
 
 dist = sqrt(dist)
 info("Distance from ideal: "*string(dist))
+info("Using weights: "*repr(Helpme.weights))
 @test 0==length(filter(x->x==0, indices))
