@@ -2,7 +2,7 @@ module Helpme
 
 export @helpme
 
-quelm(q::String)   = flatten(eval(parse(":($q)")))
+quelm(q::String)   = flatten(quote;$(parse(q));end)
 quelm(q)           = quelm(repr(q))
 flatten(s::Symbol) = {s}
 function flatten(e::Expr)
@@ -30,14 +30,14 @@ end
 
 const database = {}
 const suggbase = Dict{Symbol, String}()
-macro example(fn, suggestion)
-	fnstr = string(fn)
+macro example(suggestion, ex)
+	exstr = string(ex)
 	quote
 		try
-			$(esc(fn))()
+			$ex
 			warn("An example did not raise an error: "*$suggestion)
 		catch e
-			push!(database, Example(e, $fnstr, $suggestion))
+			push!(database, Example(e, $exstr, $suggestion))
 		end
 	end
 end
@@ -127,7 +127,7 @@ macro helpme(ex)
 	s = string(ex)
 	quote
 		try
-			$(esc(ex))
+			$ex
 		catch e
 			results = search(e, $s)
 			deletes = Int[]

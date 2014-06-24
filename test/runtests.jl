@@ -9,7 +9,7 @@ macro test_suggestion(num, ex)
 	quote
 		results = Int[]
 		try
-			$(esc(ex))()
+			$(esc(ex))
 			warn("Test #"*$(string(num))*" did not raise exception.")
 		catch e
 			search = Helpme.search(e, $(string(ex)))
@@ -98,15 +98,15 @@ end
 end
 
 @test_suggestion 11 begin
-	eval(parse("function ooewjdbwoedjfvobwe(): nkjsndf=[1:8];end; ooewjdbwoedjfvobwe()"))
+	eval(parse("function ooewjdbwoedjfvobwe11(): nkjsndf=[1:8];end; ooewjdbwoedjfvobwe11()"))
 end
 
 @test_suggestion 12 begin
-	eval(parse("function ooewjdbwoedjfvobwe(): identity(9);end; ooewjdbwoedjfvobwe()"))
+	eval(parse("function ooewjdbwoedjfvobwe12(): identity(9);end; ooewjdbwoedjfvobwe12()"))
 end
 
 @test_suggestion 13 begin
-	eval(parse("function ooewjdbwoedjfvobwe(): Base.identity(9);end; ooewjdbwoedjfvobwe()"))
+	eval(parse("function ooewjdbwoedjfvobwe13(): Base.identity(9);end; ooewjdbwoedjfvobwe13()"))
 end
 
 @test_suggestion 14 begin
