@@ -2,7 +2,8 @@ module Helpme
 
 export @helpme
 
-quelm(q::String) = flatten(eval(parse(":("*q*")")))
+quelm(q::String)   = flatten(eval(parse(":($q)")))
+quelm(q)           = quelm(repr(q))
 flatten(s::Symbol) = {s}
 function flatten(e::Expr)
 	flat = {}
@@ -19,15 +20,16 @@ type Example
 	error::Exception
 	erepr::String
 	fnstr::String
-	suggestion::String
+	suggestion::Symbol
 	equelm::Array
 	squelm::Array
-	Example(s::String) = new(KeyError(""), "", "", s, {}, {})
-	Example(e::Exception, f::String, s::String) =
-		new(e, repr(e), f, s, quelm(repr(e)), quelm(f))
+	Example(s::Symbol) = new(KeyError(""), "", "", s, {}, {})
+	Example(e::Exception, f::String, s::Symbol) =
+		new(e, repr(e), f, s, quelm(e), quelm(f))
 end
 
 const database = {}
+const suggbase = Dict{Symbol, String}()
 macro example(fn, suggestion)
 	fnstr = string(fn)
 	quote
@@ -40,6 +42,7 @@ macro example(fn, suggestion)
 	end
 end
 
+include("suggestions.jl")
 include("examples.jl")
 
 function levenshtein(a, b, len_a=length(a), len_b=length(b))
@@ -81,7 +84,7 @@ function distance(example, equelm, squelm, erepr, s)
 	d3 = levenshtein(example.erepr, erepr)   / length(erepr)
 	d4 = levenshtein(example.fnstr, s)       / length(s)
 	(w1, w2, w3, w4) = weights
-	dist = sqrt(d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4)
+	dist = d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4 # no need to sqrt
 	return dist
 end
 
@@ -89,7 +92,7 @@ function search(e::Exception, s::String)
 	examples = Example[]
 	dists = Float64[]
 	max_dist = 0
-	equelm = quelm(repr(e))
+	equelm = quelm(e)
 	squelm = quelm(s)
 	erepr = repr(e)
 	for example in database
@@ -142,11 +145,11 @@ macro helpme(ex)
 			end
 
 			if length(results) < 3
-				push!(results, Example("Helpme not helping? Report an issue at <https://github.com/snotskie/Helpme.jl/issues>."))
+				push!(results, Example(:DEFAULTMSG))
 			end
 
 			for example in results
-				info(example.suggestion)
+				info(suggbase[example.suggestion])
 			end
 
 			rethrow(e)

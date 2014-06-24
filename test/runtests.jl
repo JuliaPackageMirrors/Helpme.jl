@@ -25,6 +25,7 @@ macro test_suggestion(num, ex)
 			index = findfirst(results, $num)
 			if index == 0
 				warn("Test #"*$(string(num))*" FAILED: suggested $results instead.")
+				dump(Helpme.quelm(e))
 			end
 
 			push!(indices, index)
