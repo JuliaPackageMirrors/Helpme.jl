@@ -47,7 +47,7 @@ macro example(suggestion, ex)
 	exstr = string(ex)
 	quote
 		try
-			$ex
+			$(esc(ex))
 			warn("An example did not raise an error: "*$suggestion)
 		catch e
 			push!(database, Example(e, $exstr, $suggestion))
@@ -190,7 +190,7 @@ macro helpme(ex)
 	s = string(ex)
 	quote
 		try
-			$ex
+			$(esc(ex))
 		catch e
 			results = search(e, $s)
 			deletes = Int[]
