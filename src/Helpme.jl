@@ -2,9 +2,9 @@ module Helpme
 
 export @helpme
 
-quelm(q::String)   = flatten(quote;$(parse(q));end)
-quelm(q)           = quelm(repr(q))
-flatten(s::Symbol) = {s}
+features(q::String) = unique(flatten(quote;$(parse(q));end))
+features(q)         = features(repr(q))
+flatten(s::Symbol)  = {s}
 function flatten(e::Expr)
 	flat = {}
 	push!(flat, string(e.head))
@@ -17,19 +17,32 @@ function flatten(e::Expr)
 end
 
 type Example
-	error::Exception
-	erepr::String
-	fnstr::String
 	suggestion::Symbol
-	equelm::Array
-	squelm::Array
-	Example(s::Symbol) = new(KeyError(""), "", "", s, {}, {})
-	Example(e::Exception, f::String, s::Symbol) =
-		new(e, repr(e), f, s, quelm(e), quelm(f))
+	efeatures::Array
+	sfeatures::Array
+	weights::Dict{Any,Int}
+	Example(s::Symbol) = new(s, {}, {}, Dict())
+	function Example(e::Exception, f::String, s::Symbol)
+		weights = Dict{Any,Int}()
+		efeatures = features(e)
+		sfeatures = features(f)
+		for feature in efeatures
+			weights[feature] = 1
+		end
+
+		for feature in sfeatures
+			weights[feature] = 1
+		end
+
+		new(s, efeatures, sfeatures, weights)
+	end
 end
+
+################################################################################
 
 const database = {}
 const suggbase = Dict{Symbol, String}()
+const testbase = {}
 macro example(suggestion, ex)
 	exstr = string(ex)
 	quote
@@ -42,49 +55,38 @@ macro example(suggestion, ex)
 	end
 end
 
-include("suggestions.jl")
-include("examples.jl")
-
-function levenshtein(a, b, len_a=length(a), len_b=length(b))
-	if a == b
-		return 0
-	elseif len_a == 0
-		return len_b
-	elseif len_b == 0
-		return len_a
-	else
-		v0 = [i for i in 0:len_b]
-		v1 = zeros(length(v0))
-		for i in 1:len_a
-			v1[1] = i
-			for j in 1:len_b
-				cost = a[i]==b[j]? 0 : 1
-				v1[j+1] = minimum([
-					v1[j]+1,
-					v0[j+1]+1,
-					v0[j]+cost
-				])
-			end
-
-			for j in 1:length(v1)
-				v0[j] = v1[j]
-			end
+macro testcase(suggestion, ex)
+	exstr = string(ex)
+	quote
+		try
+			$ex
+			warn("A testcase did not raise an error: "*$suggestion)
+		catch e
+			push!(testbase, (e, $exstr, $suggestion))
 		end
-
-		return last(v1)
 	end
 end
 
-r() = 1 #r(5)
-r(n) = 2sum([rand() for i in 1:n])/n
-const weights = (44r(), 38r(), 21r(), 33r())
-function distance(example, equelm, squelm, erepr, s)
-	d1 = levenshtein(example.equelm, equelm) / length(equelm)
-	d2 = levenshtein(example.squelm, squelm) / length(squelm)
-	d3 = levenshtein(example.erepr, erepr)   / length(erepr)
-	d4 = levenshtein(example.fnstr, s)       / length(s)
-	(w1, w2, w3, w4) = weights
-	dist = d1*d1*w1 + d2*d2*w2 + d3*d3*w3 + d4*d4*w4 # no need to sqrt
+include("suggestions.jl")
+include("examples.jl")
+include("testcases.jl")
+
+################################################################################
+
+function distance2(example, efeatures, sfeatures, erepr, s)
+	dist = 0
+	for feature in example.efeatures
+		if !(feature in efeatures)
+			dist += example.weights[feature]
+		end
+	end
+
+	for feature in example.sfeatures
+		if !(feature in sfeatures)
+			dist += example.weights[feature]
+		end
+	end
+
 	return dist
 end
 
@@ -92,11 +94,11 @@ function search(e::Exception, s::String)
 	examples = Example[]
 	dists = Float64[]
 	max_dist = 0
-	equelm = quelm(e)
-	squelm = quelm(s)
+	efeatures = features(e)
+	sfeatures = features(s)
 	erepr = repr(e)
 	for example in database
-		dist = distance(example, equelm, squelm, erepr, s)
+		dist = distance2(example, efeatures, sfeatures, erepr, s)
 		if length(examples) < 3
 			push!(examples, example)
 			push!(dists, dist)
@@ -122,6 +124,64 @@ function search(e::Exception, s::String)
 
 	return examples
 end
+
+################################################################################
+
+function reroll(example, adj)
+	for (feature, weight) in example.weights
+		if rand() < 0.5
+			example.weights[feature] += adj
+		end
+	end
+end
+
+function train()
+	info("Training database")
+	clean = false
+	while !clean
+		clean = true
+		for (error, fnstr, suggestion) in testbase
+			results = search(error, fnstr)
+			if !(suggestion in map(x->x.suggestion, results))
+				clean = false
+				for example in database
+					if suggestion == example.suggestion
+						reroll(example, -1)
+					end
+				end
+
+				for result in results
+					reroll(result, 1)
+				end
+			else
+				# nothing
+			end
+		end
+	end
+end
+
+function load()
+	info("Loading database")
+	open(Pkg.dir()*"/Helpme/database", "r") do f
+		database = deserialize(f)
+	end
+end
+
+function save()
+	info("Saving database")
+	open(Pkg.dir()*"/Helpme/database", "w") do f
+		serialize(f, database)
+	end
+end
+
+if isfile(Pkg.dir()*"/Helpme/database")
+	load()
+else
+	train()
+	save()
+end
+
+################################################################################
 
 macro helpme(ex)
 	s = string(ex)
