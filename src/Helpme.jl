@@ -160,22 +160,25 @@ function train()
 	end
 end
 
-function load()
-	info("Loading database")
-	open(Pkg.dir()*"/Helpme/database", "r") do f
-		database = deserialize(f)
-	end
-end
-
 function save()
 	info("Saving database")
-	open(Pkg.dir()*"/Helpme/database", "w") do f
-		serialize(f, database)
+	open(Pkg.dir()*"/Helpme/src/database.jl", "w") do f
+		for (i, example) in enumerate(database)
+			for (j, feature) in enumerate(example.efeatures)
+				w = database[i].weights[database[i].efeatures[j]]
+				println(f, "database[$i].weights[database[$i].efeatures[$j]]=$w")
+			end
+
+			for (j, feature) in enumerate(example.sfeatures)
+				w = database[i].weights[database[i].sfeatures[j]]
+				println(f, "database[$i].weights[database[$i].sfeatures[$j]]=$w")
+			end
+		end
 	end
 end
 
-if isfile(Pkg.dir()*"/Helpme/database")
-	load()
+if isfile(Pkg.dir()*"/Helpme/src/database.jl")
+	include("database.jl")
 else
 	train()
 	save()
