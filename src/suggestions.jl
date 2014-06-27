@@ -1,9 +1,8 @@
 suggbase[:DEFAULTMSG] = "Helpme not helping? Report an issue at <https://github.com/snotskie/Helpme.jl/issues>."
 
-suggbase[:DICT_MERGE] = "Julia attempts to choose the proper type for Dicts when [brackets] "*
-"are used, and merge can be fussy when types don't match up. To force Julia to "*
-"assign the type Dict{Any,Any}, use {braces} in your variable definitions for "*
-"Dicts."
+suggbase[:DICT_MERGE] = "Julia attempts to choose the proper type for Dicts when brackets[] "*
+"are used, and functions like merge can be fussy when types don't match up. To force Julia to "*
+"assign the type Dict{Any,Any}, use braces{}."
 
 suggbase[:STR_CONCAT] = "Strings are concatenated with the * operator, not the + operator."
 
@@ -53,25 +52,28 @@ suggbase[:INDEX_BASE] = "Julia has 1-based indexing, so the first element is at 
 "Also, index -1 throws an error; use the end keyword as an index to get the last element."
 
 suggbase[:STRCONVERT] = "Values are not automatically converted to strings during string concatenation. "*
-"Convert them first using the \"string\" function."
+"Convert them first using the \"string\" function. More info at <http://bit.ly/1rF5fBE>."
 
 suggbase[:RANGEARRAY] = "The a:b syntax creates a Range object. Surround in brackets like [a:b] to "*
-"create an Array."
+"create an Array. More info at <http://bit.ly/1lTfcdT>."
 
 suggbase[:KEYWORDARG] = "Julia distinguishes between keyword and optional arguments. For a function "*
 "f(x, y=1; z=2), x is required, y is optional, and z is a keyword. Invoking f(1, z=3) "*
-"is legal, but f(1, y=2, z=3) is not. Note the position of the semi-colon in the function "*
-"definition."
+"is legal, but not f(1, y=2, z=3). Note the position of the semi-colon. More info at <http://bit.ly/UNNRQr>."
 
 suggbase[:TYPEASSERT] = "The value::Type syntax is Julia has multiple meanings. It is used in argument lists "*
 "and variable definitions to declare type. It is used everywhere else as a type assertion. "*
 "Perhaps you mean to use the \"isa\" function, the \"convert\" function, or a constructor. "*
-"If not, it's best to write your code so it operates on a wider range of types."
+"If not, it's best to write your code so it operates on a wider range of types. More info at <http://bit.ly/1jSlkz0>."
 
 suggbase[:ISOPERATOR] = "The <: operator operates on two types, not a value and a type. The \"isa\" function "*
-"takes a value and a type."
+"takes a value and a type. More info at <http://bit.ly/1po1fsf>."
 
 suggbase[:SYMBOLEXPR] = "The simpler :(x) syntax returns a Symbol, whereas the more complex :(x+y), "*
-"etc. syntax returns an Expr."
+"etc. syntax returns an Expr. More info at <http://bit.ly/1pFoycM>."
 
-suggbase[:DOT_EQUALS] = "The .=== operator does not exist. Use .== or a comprehension instead."
+suggbase[:DOT_EQUALS] = "The .=== operator does not exist. Use .== or a comprehension instead. "*
+"More info at <http://bit.ly/TCB3vk>."
+
+suggbase[:TYPE_PARAM] = "The X in \"function myfunction{X}()\" does not declare the return type "*
+"of the function. This syntax is used to declare parametric types. More info at <http://bit.ly/1mAsPPT>."

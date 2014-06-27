@@ -146,3 +146,7 @@ end
 @example :DOT_EQUALS begin
 	eval(parse("[].===6"))
 end
+
+@example :TYPE_PARAM begin
+	eval(parse("function f33{::Any}();end"))
+end

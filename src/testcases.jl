@@ -190,3 +190,7 @@ end
 @testcase :DOT_EQUALS begin
 	eval(parse("myarray=Int[];mymatches.===234"))
 end
+
+@testcase :TYPE_PARAM begin
+	eval(parse("function asdasdfqwef{T::Any}(x::T, y::T)x+y;end"))
+end
