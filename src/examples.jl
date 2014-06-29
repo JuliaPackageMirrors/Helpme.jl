@@ -27,7 +27,6 @@ end
 
 @example :NOT_PYTHON begin
 	eval(parse("if true"))
-
 end
 
 @example :NOT_PYTHON begin
