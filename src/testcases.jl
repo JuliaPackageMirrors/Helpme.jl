@@ -194,3 +194,11 @@ end
 @testcase :TYPE_PARAM begin
 	eval(parse("function asdasdfqwef{T::Any}(x::T, y::T)x+y;end"))
 end
+
+@testcase :INDIRECTFN begin
+	function sdfgerfqefwerg(i::Int, f::Number)
+		print() = print(i, f)
+		print()
+	end
+	sdfgerfqefwerg(5, 12.3)
+end

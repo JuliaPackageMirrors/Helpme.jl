@@ -150,3 +150,12 @@ end
 @example :TYPE_PARAM begin
 	eval(parse("function f33{::Any}();end"))
 end
+
+@example :INDIRECTFN begin
+	function l(::Any);end
+	function li(a::Any)
+		l() = l(a)
+		l()
+	end
+	li(6)
+end

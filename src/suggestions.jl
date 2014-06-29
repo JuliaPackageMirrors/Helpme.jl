@@ -2,21 +2,22 @@ suggbase[:DEFAULTMSG] = "Helpme not helping? Report an issue at <https://github.
 
 suggbase[:DICT_MERGE] = "Julia attempts to choose the proper type for Dicts when brackets[] "*
 "are used, and functions like merge can be fussy when types don't match up. To force Julia to "*
-"assign the type Dict{Any,Any}, use braces{}."
+"assign the type Dict{Any,Any}, use braces{}. More info at <http://bit.ly/1nUDhyc>."
 
-suggbase[:STR_CONCAT] = "Strings are concatenated with the * operator, not the + operator."
+suggbase[:STR_CONCAT] = "Strings are concatenated with the * operator, not the + operator. "*
+"More info at <http://bit.ly/1rF5fBE>."
 
 suggbase[:REGEX_ITER] = "When iterating over regex matches with functions like eachmatch, "*
 "especially when using the matches as indices or keys, you might mean m.match "*
-"where you have just m or m.captures."
+"where you have just m or m.captures. More info at <http://bit.ly/1nUDx0a>."
 
 suggbase[:INVARIANTS] = "Type parameters in Julia are invariant, meaning although Int <: Number is true, "*
 "Array{Int} <: Array{Number} is false. This can be annoying when defining functions. "*
-"Instead of \"f(Array{Number})=...\" try \"f{T<:Number}(Array{T})=...\""
+"Instead of \"f(Array{Number})=...\" try \"f{T<:Number}(Array{T})=...\" More info at <http://bit.ly/1k2C3iY>."
 
 suggbase[:NOT_PYTHON] = "Julia is not Python. All if, for, begin, function, etc. blocks must be "*
 "completed with an end statement. Similarly, all end statements must have been \"opened\" "*
-"with an if, for, etc. statement. Count your open and closes and make sure they match."
+"with an if, for, etc. statement. Count your open and closes and make sure they match. More info at <http://bit.ly/1x0ENFE>."
 
 suggbase[:BASE_ANDOR] = "Because && and || are logical operators with short-circuit behavior, "*
 "it is not possible to override or access Base.&& and Base.||."
@@ -77,3 +78,6 @@ suggbase[:DOT_EQUALS] = "The .=== operator does not exist. Use .== or a comprehe
 
 suggbase[:TYPE_PARAM] = "The X in \"function myfunction{X}()\" does not declare the return type "*
 "of the function. This syntax is used to declare parametric types. More info at <http://bit.ly/1mAsPPT>."
+
+suggbase[:INDIRECTFN] = "To extend a generic function within another function, you must "*
+"either declare it global or use the fully qualified name. More info at <http://bit.ly/1yZOHJE>."
