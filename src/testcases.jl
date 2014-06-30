@@ -202,3 +202,9 @@ end
 	end
 	sdfgerfqefwerg(5, 12.3)
 end
+
+@testcase :COLLECTSUM begin
+	mydict = Dict{Int32,Int32}()
+	v = values(mydict)
+	sum(v)
+end

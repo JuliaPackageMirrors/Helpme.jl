@@ -158,3 +158,7 @@ end
 	end
 	li(6)
 end
+
+@example :COLLECTSUM begin
+	sum(values(Dict()))
+end

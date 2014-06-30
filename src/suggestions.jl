@@ -17,7 +17,8 @@ suggbase[:INVARIANTS] = "Type parameters in Julia are invariant, meaning althoug
 
 suggbase[:NOT_PYTHON] = "Julia is not Python. All if, for, begin, function, etc. blocks must be "*
 "completed with an end statement. Similarly, all end statements must have been \"opened\" "*
-"with an if, for, etc. statement. Count your open and closes and make sure they match. More info at <http://bit.ly/1x0ENFE>."
+"with an if, for, etc. statement. Count your open and closes and make sure they match. More info at "*
+"<http://bit.ly/1x0ENFE>."
 
 suggbase[:BASE_ANDOR] = "Because && and || are logical operators with short-circuit behavior, "*
 "it is not possible to override or access Base.&& and Base.||."
@@ -50,7 +51,8 @@ suggbase[:PUSHAPPEND] = "The append! function appends arrays together, so the se
 "second argument can be any type supported by the array."
 
 suggbase[:INDEX_BASE] = "Julia has 1-based indexing, so the first element is at index 1, not index 0. "*
-"Also, index -1 throws an error; use the end keyword as an index to get the last element. More info at <http://bit.ly/1qpip8u>."
+"Also, index -1 throws an error; use the end keyword as an index to get the last element. More info "*
+"at <http://bit.ly/1qpip8u>."
 
 suggbase[:STRCONVERT] = "Values are not automatically converted to strings during string concatenation. "*
 "Convert them first using the \"string\" function. More info at <http://bit.ly/1rF5fBE>."
@@ -65,7 +67,8 @@ suggbase[:KEYWORDARG] = "Julia distinguishes between keyword and optional argume
 suggbase[:TYPEASSERT] = "The value::Type syntax is Julia has multiple meanings. It is used in argument lists "*
 "and variable definitions to declare type. It is used everywhere else as a type assertion. "*
 "Perhaps you mean to use the \"isa\" function, the \"convert\" function, or a constructor. "*
-"If not, it's best to write your code so it operates on a wider range of types. More info at <http://bit.ly/1jSlkz0>."
+"If not, it's best to write your code so it operates on a wider range of types. More info at "*
+"<http://bit.ly/1jSlkz0>."
 
 suggbase[:ISOPERATOR] = "The <: operator operates on two types, not a value and a type. The \"isa\" function "*
 "takes a value and a type. More info at <http://bit.ly/1po1fsf>."
@@ -81,3 +84,7 @@ suggbase[:TYPE_PARAM] = "The X in \"function myfunction{X}()\" does not declare 
 
 suggbase[:INDIRECTFN] = "To extend a generic function within another function, you must "*
 "either declare it global or use the fully qualified name. More info at <http://bit.ly/1yZOHJE>."
+
+suggbase[:COLLECTSUM] = "A possible bug in Julia, sum cannot be called on an empty iterator. "*
+"Wrap the iterator in a call to the collect function first, such as in collect(values(mydict)). "*
+"More info at <http://bit.ly/1rPKnaX>."
