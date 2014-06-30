@@ -40,9 +40,9 @@ end
 
 ################################################################################
 
-const database = {}
+const database = Example[]
 const suggbase = Dict{Symbol, String}()
-const testbase = {}
+const testbase = (Exception, String, Symbol)[]
 macro example(suggestion, ex)
 	exstr = string(ex)
 	quote
@@ -162,7 +162,7 @@ end
 
 function save()
 	info("Saving database")
-	open(Pkg.dir()*"/Helpme/src/database.jl", "w") do f
+	open(joinpath(Pkg.dir(), "Helpme", "src", "database.jl"), "w") do f
 		for (i, example) in enumerate(database)
 			for (j, feature) in enumerate(example.efeatures)
 				w = database[i].weights[database[i].efeatures[j]]
@@ -177,7 +177,7 @@ function save()
 	end
 end
 
-if isfile(Pkg.dir()*"/Helpme/src/database.jl")
+if isfile(joinpath(Pkg.dir(), "Helpme", "src", "database.jl"))
 	include("database.jl")
 else
 	train()

@@ -23,11 +23,11 @@ suggbase[:BASE_ANDOR] = "Because && and || are logical operators with short-circ
 "it is not possible to override or access Base.&& and Base.||."
 
 suggbase[:ARRAY_SIZE] = "The i in the expression \"Array{Int,i}\" is not the length of the array "*
-"but instead the number of dimensions."
+"but instead the number of dimensions. More info at <http://bit.ly/TIkOgg>."
 
 suggbase[:FUNC_COLON] = "Putting a colon in a function declaration, such as in \"function f():\", "*
 "is grammatically correct, but it confuses the parser. Do not use colons in Julia like "*
-"you do in Python to start blocks."
+"you do in Python to start blocks. More info at <http://bit.ly/1nWfWgN>."
 
 suggbase[:DICTS_ITER] = "Iteration over dictionaries in Julia is iteration over (key, value), "*
 "not just over key or over value like in other languages. Use expressions like "*
@@ -43,14 +43,14 @@ suggbase[:IS_DEFINED] = "Methods like isdefined take Symbols as parameters, not 
 "for x."
 
 suggbase[:IF_BOOLEAN] = "If blocks and ternary operations in Julia require Boolean types, like Java, "*
-"not JavaScript."
+"not JavaScript. More info at <http://bit.ly/1pNZwrZ>."
 
 suggbase[:PUSHAPPEND] = "The append! function appends arrays together, so the second argument needs "*
 "to be iterable, whereas the push! function pushes a single value into an array, so the "*
 "second argument can be any type supported by the array."
 
 suggbase[:INDEX_BASE] = "Julia has 1-based indexing, so the first element is at index 1, not index 0. "*
-"Also, index -1 throws an error; use the end keyword as an index to get the last element."
+"Also, index -1 throws an error; use the end keyword as an index to get the last element. More info at <http://bit.ly/1qpip8u>."
 
 suggbase[:STRCONVERT] = "Values are not automatically converted to strings during string concatenation. "*
 "Convert them first using the \"string\" function. More info at <http://bit.ly/1rF5fBE>."
