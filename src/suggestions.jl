@@ -88,3 +88,7 @@ suggbase[:INDIRECTFN] = "To extend a generic function within another function, y
 suggbase[:COLLECTSUM] = "A possible bug in Julia, sum cannot be called on an empty iterator. "*
 "Wrap the iterator in a call to the collect function first, such as in collect(values(mydict)). "*
 "More info at <http://bit.ly/1rPKnaX>."
+
+suggbase[:DIMS_MATCH] = "The * operator applied to matrices means matrix multiplication, so dimensions "*
+"must be NxK and KxM. To perform element-wise multiplication on matrices of identical dimensions, use "*
+"the .* operator. More info at <http://bit.ly/TCB3vk>."

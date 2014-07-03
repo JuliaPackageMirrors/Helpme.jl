@@ -208,3 +208,8 @@ end
 	v = values(mydict)
 	sum(v)
 end
+
+@testcase :DIMS_MATCH begin
+	myarrray = rand(-10:10, (4, 5, 6))
+	myarrray[:,:,1] * (myarrray[:,:,1] * 0.5)
+end

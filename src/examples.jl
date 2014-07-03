@@ -162,3 +162,7 @@ end
 @example :COLLECTSUM begin
 	sum(values(Dict()))
 end
+
+@example :DIMS_MATCH begin
+	ones((4,5)) * ones((4,5))
+end
