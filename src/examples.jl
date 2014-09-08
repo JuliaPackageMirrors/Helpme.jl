@@ -166,3 +166,25 @@ end
 @example :DIMS_MATCH begin
 	ones((4,5)) * ones((4,5))
 end
+
+@example :BOOLBITOPS begin
+	if 1 & 2 | 3
+	end
+end
+
+@example :BOOLASSIGN begin
+	eval(parse("if a=0;end"))
+end
+
+@example :BOOLLENGTH begin
+	if length([])
+	end
+end
+
+@example :MAKESTRING begin
+	String()
+end
+
+@example :MAKESYMBOL begin
+	Symbol()
+end

@@ -92,3 +92,13 @@ suggbase[:COLLECTSUM] = "A possible bug in Julia, sum cannot be called on an emp
 suggbase[:DIMS_MATCH] = "The * operator applied to matrices means matrix multiplication, so dimensions "*
 "must be NxK and KxM. To perform element-wise multiplication on matrices of identical dimensions, use "*
 "the .* operator. More info at <http://bit.ly/TCB3vk>."
+
+suggbase[:BOOLBITOPS] = "The & and | operators are bitwise, whereas the && and || operators are logical."
+
+suggbase[:BOOLASSIGN] = "The = symbol is used for assignment, whereas the == and === operators are used to test equality."
+
+suggbase[:BOOLLENGTH] = "Use the isempty() method instead of the length() method within a boolean expression."
+
+suggbase[:MAKESTRING] = "The String() constructor does not exist. Use the string() function instead."
+
+suggbase[:MAKESYMBOL] = "The Symbol() constructor does not exist. Use the symbol() function instead."
