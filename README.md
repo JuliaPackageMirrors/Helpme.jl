@@ -9,10 +9,7 @@ julia> using Helpme
 julia> @helpme begin
        merge(["foo"=>"Hello World!"], ["bar"=>1337])
        end
-INFO: Julia attempts to choose the proper type for Dicts when [brackets] are
-used, and merge can be fussy when types don't match up. To force Julia to
-assign the type Dict{Any,Any}, use {braces} in your variable definitions for
-Dicts.
+INFO: Julia attempts to choose the proper type for Dicts when [...] is used, and functions like merge(collection, others...) can be fussy when types don't match up. To force Julia to assign the type Dict{Any,Any}, use {...}. More info at <http://bit.ly/1nUDhyc>.
 ```
 
 Helpme will attempt to find a suggestion based on the exception raised and the code passed. If one is found, it will print a friendly message to INFO.
@@ -34,6 +31,8 @@ julia> @helpme eval(parse("a .=== b"))
 Note that there are serious issues with using `eval`: [it always uses global scope](https://github.com/JuliaLang/julia/issues/2386). Take care with this workaround.
 
 ## Retraining
-Helpme's database needs to be trained (which only takes about a second). I'll make sure each version has an appropriate pre-trained database set-up in `Helpme/src/database.jl` so that training only needs to be done on my machine.
+Helpme's database needs to be trained when it first loads (which only takes a few seconds). Furthermore, because each verson of Julia may have different syntax trees and/or error messages, each requires its own database file.
 
-However, if you want to retrain this database for any reason, it's possible by deleting `Helpme/src/database.jl`, opening the Julia REPL, and running `julia> using Helpme`.
+I'll attempt to include an appropriate pre-trained database for each Julia version in `Helpme/src/database.VERSION.jl` so that training only needs to be done on my machine.
+
+However, if you want to retrain your database manually for any reason, delete `Helpme/src/database.VERSION.jl`, open the Julia REPL, and run `julia> using Helpme`.
