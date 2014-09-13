@@ -162,7 +162,7 @@ end
 
 function save()
 	info("Saving database")
-	open(joinpath(Pkg.dir(), "Helpme", "src", "database.jl"), "w") do f
+	open(joinpath(Pkg.dir(), "Helpme", "src", string("database.",VERSION,".jl")), "w") do f
 		for (i, example) in enumerate(database)
 			for (j, feature) in enumerate(example.efeatures)
 				w = database[i].weights[database[i].efeatures[j]]
@@ -177,8 +177,8 @@ function save()
 	end
 end
 
-if isfile(joinpath(Pkg.dir(), "Helpme", "src", "database.jl"))
-	include("database.jl")
+if isfile(joinpath(Pkg.dir(), "Helpme", "src", string("database.",VERSION,".jl")))
+	include(string("database.",VERSION,".jl"))
 else
 	train()
 	save()

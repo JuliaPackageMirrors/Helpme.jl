@@ -96,6 +96,16 @@ end
 	end
 end
 
+@example :IF_BOOLEAN begin
+	if 1 & 2 | 3
+	end
+end
+
+@example :IF_BOOLEAN begin
+	if length([])
+	end
+end
+
 @example :PUSHAPPEND begin
 	l = Int[]
 	push!(l,[6])
@@ -167,18 +177,8 @@ end
 	ones((4,5)) * ones((4,5))
 end
 
-@example :BOOLBITOPS begin
-	if 1 & 2 | 3
-	end
-end
-
 @example :BOOLASSIGN begin
 	eval(parse("if a=0;end"))
-end
-
-@example :BOOLLENGTH begin
-	if length([])
-	end
 end
 
 @example :MAKESTRING begin

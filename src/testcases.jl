@@ -126,6 +126,20 @@ end
 	end
 end
 
+@example :IF_BOOLEAN begin
+	argaegfawerg = 4313
+	nvijenvierng = 12342
+	if argaegfawerg & nvijenvierng
+	elseif argaegfawerg | nvijenvierng
+	end
+end
+
+@example :IF_BOOLEAN begin
+	myarrray = rand(-10:10, (4, 5, 6))
+	if length(myarrray)
+	end
+end
+
 @testcase :PUSHAPPEND begin
 	asdfgsdg = Float32[]
 	push!(asdfgsdg, [3.14])
@@ -214,22 +228,8 @@ end
 	myarrray[:,:,1] * (myarrray[:,:,1] * 0.5)
 end
 
-@example :BOOLBITOPS begin
-	argaegfawerg = 4313
-	nvijenvierng = 12342
-	if argaegfawerg & nvijenvierng
-	elseif argaegfawerg | nvijenvierng
-	end
-end
-
 @example :BOOLASSIGN begin
 	eval(parse("while myexamplefoobarvariable='this is a string';end"))
-end
-
-@example :BOOLLENGTH begin
-	myarrray = rand(-10:10, (4, 5, 6))
-	if length(myarrray)
-	end
 end
 
 @example :MAKESTRING begin
